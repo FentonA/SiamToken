@@ -1,13 +1,14 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.5.1;
 
 contract SiamToken{
      string public name = "Siam Token";
      string public symbol = "Siam";
      string public standard = "Siam Token v1.0";
-     uint18 public decimals = 18;
+     uint8 public decimals = 18;
      uint256 public totalSupply;
 
      mapping(address => uint256) public balanceOf;
+     mapping(address => mapping(address => uint256 )) public allowance;
 
     //Address tied to QPR generated data
     //  mapping(address => )
@@ -15,41 +16,50 @@ contract SiamToken{
      event Transfer(
          address indexed _from,
          address indexed _to,
-         uint256 _value,
+         uint256 _value
      );
 
      event Approval (
-         addresss indexed _owner,
-         addreess indexed _spender,
+         address indexed _owner,
+         address indexed _spender,
          uint _value 
      );
 
-     function SiamToken (uint256 _initialSupply) public {
+     function siamToken (uint256 _initialSupply) public {
          balanceOf[msg.sender] = _initialSupply;
          totalSupply = _initialSupply; 
      }
      
-     function transfer(adding _to, uint256 _value) public returns (bool success){
-         require(balanceOf[msg.sender] >= value);
+     function transfer(address _to, uint256 _value) public returns (bool success){
+         require(balanceOf[msg.sender] >= _value);
 
-         balanceOf[msg.sender] -= value;
+         balanceOf[msg.sender] -= _value;
          balanceOf[_to] += _value;
 
-         Transfer(msg.sender, _to, _balue)
+         emit Transfer(msg.sender, _to, _value);
 
          return true;
      }
 
-     function approve(address _sender, uint256 _value)public returns (bool success ){
-         require(_value <= balanceOf[_from]);
+     function approve(address _spender, uint256 _value)public returns (bool success ){
         //  require(_value <= al)
+        allowance[msg.sender][_spender] = _value;
 
-        balanceOf[_from] -= _value;
-        valanceOf[_to] += value;
-        allowance[_from][msg.sender] -= _value;
-
-        Transfer(_from, _to, _value)
+        emit Approval(msg.sender, _spender,  _value);
 
         return true;
+     }
+
+     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success){
+         require(_value <= balanceOf[_from]);
+         require(_value <= allowance[_from][msg.sender]);
+
+         balanceOf[_from] -=  _value;
+         balanceOf[_to] += _value;
+         allowance[_from][msg.sender] -= _value;
+
+        emit Transfer(_from, _to, _value);
+
+         return true;
      }
 }

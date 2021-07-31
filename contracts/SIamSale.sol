@@ -1,9 +1,9 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.5.1;
 
-import './SiamToken./sol';
+import './SiamToken.sol';
 
 contract SiamSale{
-    address 
+    address payable public admin;
     SiamToken public siamContract;
     uint256 public tokenPrice;
     uint256 tokenSold;
@@ -17,19 +17,23 @@ contract SiamSale{
 
     }
 
-    function buyTokens(uint256 _numberOfTokens) public payable{
-        require(msg.value == muliply(_numberOfTokens, tokenPrice));
-        require(siamContract.balanceOf(this)>= _numberOfTokens);
-        require(siamContract,transfer(msg.sender, _numberOfTokens));
+    function multiply(uint x, uint y) internal pure returns (uint z){
+        require(y == 0 || (z = x * y) / y == x);
+    }
 
-        tokenSold += _numnerOfTokens;
-        Sell(msg.sender, _numberOfTokens);
+    function buyTokens(uint256 _numberOfTokens) public payable{
+        require( msg.value == multiply(_numberOfTokens, tokenPrice));
+        require(siamContract.balanceOf(address(this))>= _numberOfTokens);
+        require(siamContract.transfer(msg.sender, _numberOfTokens));
+
+        tokenSold += _numberOfTokens;
+       emit Sell(msg.sender, _numberOfTokens);
 
     }
 
     function endSale() public {
         require(msg.sender == admin);
-        require(siamContract.transfer(admin, tokenContract.balanceOf(this)));
+        require(siamContract.transfer(admin, siamContract.balanceOf(address(this))));
 
         selfdestruct(admin);
     }
