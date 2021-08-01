@@ -12,7 +12,7 @@ contract('SiamToken', function(accounts) {
       assert.equal(name, 'Siam Token', 'has the correct name');
       return tokenInstance.symbol()
     }).then(function(symbol) {
-      assert.equal(symbol, 'Siam', 'has the correct symbol');
+      assert.equal(symbol, 'SIAM', 'has the correct symbol');
       return tokenInstance.standard();
     }).then(function(standard) {
       assert.equal(standard, 'Siam Token v1.0', 'has the correct standard');
