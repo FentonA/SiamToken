@@ -2,16 +2,13 @@ pragma solidity ^0.5.1;
 
 contract SiamToken{
      string public name = "Siam Token";
-     string public symbol = "Siam";
+     string public symbol = "SIAM";
      string public standard = "Siam Token v1.0";
      uint8 public decimals = 18;
      uint256 public totalSupply;
 
      mapping(address => uint256) public balanceOf;
      mapping(address => mapping(address => uint256 )) public allowance;
-
-    //Address tied to QPR generated data
-    //  mapping(address => )
 
      event Transfer(
          address indexed _from,
